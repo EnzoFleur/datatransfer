@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --job-name=lifranum_fred # nom du job
+#SBATCH -C v100-32g # reserver des GPU 16 Go seulement
+#SBATCH --qos=qos_gpu-t4 # QoS
+#SBATCH --output=lifranum_fred%j.out # fichier de sortie (%j = job ID)
+#SBATCH --error=lifranum_fred%j.err # fichier d’erreur (%j = job ID)
+#SBATCH --time=100:00:00 # temps maximal d’allocation "(HH:MM:SS)"
+#SBATCH --nodes=1 # reserver 1 nœud
+#SBATCH --ntasks=4 # reserver 4 taches (ou processus MPI)
+#SBATCH --gres=gpu:4 # reserver 4 GPU
+#SBATCH --cpus-per-task=2 # reserver 2 CPU par tache (et memoire associee)
+#SBATCH --hint=nomultithread # desactiver l’hyperthreading
+
+module purge # nettoyer les modules herites par defaut
+conda deactivate # desactiver les environnements herites par defaut
+module load tensorflow-gpu/py3/2.3.1 # charger les modules
+set -x # activer l’echo des commandes
+srun python -u train_fred.py # executer son script
