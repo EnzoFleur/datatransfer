@@ -89,6 +89,8 @@ if __name__=="__main__":
     from sklearn.model_selection import train_test_split
     import tensorflow as tf
 
+    del df, ang_tok, mask_ang_tok, ang_tok_shift, mask_ang_tok_shift
+
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.80, random_state=101)
     train_data = tf.data.Dataset.from_tensor_slices((X_train,Y_train)).batch(batch_size)
     test_data = tf.data.Dataset.from_tensor_slices((X_test,Y_test)).batch(batch_size)
@@ -120,7 +122,6 @@ if __name__=="__main__":
     te_loss = []
     tr_acc = []
     te_acc = []
-
         
     for epoch in range(1, epochs + 1):
         print(epoch,flush=True,)
@@ -151,6 +152,7 @@ if __name__=="__main__":
             test_accuracy(label, prediction)
         #print(" ".join(model.generate(aut2id["radiohead"],word_map['<S>'],word_map['</S>'])))
         #print(" ".join(model.generate(aut2id["disney"],word_map['<S>'],word_map['</S>'])))
+
         print(
         f'Loss: {train_loss.result()}, '
         f'Accuracy: {train_accuracy.result() * 100}, '
