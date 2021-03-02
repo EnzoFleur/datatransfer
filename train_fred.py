@@ -21,7 +21,7 @@ if __name__=="__main__":
     nlp = English()
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
 
-    dir="C:\\Users\\EnzoT\\Documents\\datasets\\gutenberg\\export"
+    dir="../../datasets/export"
     authors = os.listdir(dir)   
 
     n_sentences = 200
