@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=lifranum_fred # nom du job
+#SBATCH --partition=gpu_p2 #partition
 #SBATCH -C v100-32g # reserver des GPU 32 Go seulement
 #SBATCH --qos=qos_gpu-t4 # QoS
 #SBATCH --output=lifranum_fred%j.out # fichier de sortie (%j = job ID)
