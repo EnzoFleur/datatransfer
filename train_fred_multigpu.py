@@ -11,15 +11,13 @@ from spacy.lang.en import English
 from gensim.models import Word2Vec
 from nltk.probability import FreqDist
 
-from tensorflow.keras import layers,Model
-from tensorflow.keras.initializers import Constant
 import tensorflow as tf
 
 from sklearn.model_selection import train_test_split
 
 import horovod.tensorflow.keras as hvd
 
-from fred import S2S, compute_loss, compute_apply_gradients_multigpu, pad
+from fred import S2S, compute_loss, compute_apply_gradients_multigpu
 
 @tf.function
 def compute_apply_gradients_multigpu(model,loss_f,a,x_topic,x,x_mask,y,y_mask, optimizer, first_batch):

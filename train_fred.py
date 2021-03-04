@@ -5,16 +5,17 @@
 import os  
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 
 from spacy.lang.en import English
 from gensim.models import Word2Vec
 from nltk.probability import FreqDist
 
-from tensorflow.keras import layers,Model
-from tensorflow.keras.initializers import Constant
+from sklearn.model_selection import train_test_split
+
 import tensorflow as tf
 
-from fred import S2S, compute_loss, compute_apply_gradients, pad
+from fred import S2S, compute_loss, compute_apply_gradients
 
 if __name__=="__main__":
 
@@ -86,9 +87,6 @@ if __name__=="__main__":
 
     X = X.astype(np.float32)
 
-    from sklearn.model_selection import train_test_split
-    import tensorflow as tf
-
     del df, ang_tok, mask_ang_tok, ang_tok_shift, mask_ang_tok_shift
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.80, random_state=101)
@@ -98,8 +96,6 @@ if __name__=="__main__":
     # ### Model declaration and training
 
     model = S2S(na,word_vectors,i2w,ang_pl)
-
-    from tqdm import tqdm
 
     train_loss = tf.keras.metrics.Mean(name='train_loss')
     train_accuracy = tf.keras.metrics.CategoricalAccuracy(name='train_accuracy')
