@@ -152,7 +152,7 @@ if __name__=="__main__":
     ]
 
     loss_f = tf.keras.losses.CategoricalCrossentropy()
-    epochs = 140
+    epochs = 100
 
     checkpoint_dir = 'training_checkpoints' if hvd.rank() == 0 else None
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")

@@ -39,7 +39,7 @@ if __name__=="__main__":
     authors = os.listdir(dir)   
 
     max_length=512
-    n_sentences = 200
+    n_sentences = 100
     data = []
     for author in authors:
         books=os.listdir(os.path.join(dir, author))
@@ -130,7 +130,7 @@ if __name__=="__main__":
         
     optimizer = tf.keras.optimizers.Adam()
     loss_f = tf.keras.losses.CategoricalCrossentropy()
-    epochs = 140
+    epochs = 50
 
     checkpoint_dir = 'training_checkpoints'
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
