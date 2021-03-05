@@ -34,7 +34,6 @@ if __name__=="__main__":
             with open(os.path.join(dir,author, book), 'r',encoding="utf-8") as fp:
                 lines=fp.readlines()
                 for line in lines[100:]:
-                    # if len(line)<=500:
                     count=count+1
                     sent=line.replace("\n","")
                     tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''] + ['</S>']
