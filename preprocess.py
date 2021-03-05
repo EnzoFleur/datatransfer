@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 import os  
 import pandas as pd
 import numpy as np
@@ -21,8 +20,10 @@ if __name__=="__main__":
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
 
     dir="../../datasets/export"
+    # dir="C:\\Users\\EnzoT\\Documents\\datasets\\gutenberg\\export"
     authors = os.listdir(dir)   
 
+    max_length=512
     n_sentences = 200
     data = []
     print("Iterating through authors ... ", flush=True)
@@ -37,7 +38,8 @@ if __name__=="__main__":
                     count=count+1
                     sent=line.replace("\n","")
                     tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''] + ['</S>']
-                    data.append((author,sent,tok))
+                    
+                    data.append((author,sent,tok[:max_length]))
 
                     if count==n_sentences:
                         break
@@ -58,7 +60,7 @@ if __name__=="__main__":
 
     print("Training Word2Vec")
 
-    EMBEDDING_SIZE = 300
+    EMBEDDING_SIZE = 100
     w2v = Word2Vec(list(df['Tokens']), size=EMBEDDING_SIZE, window=10, min_count=1, negative=10, workers=10)
     word_map = {}
     word_map["<PAD>"] = 0
@@ -87,6 +89,13 @@ if __name__=="__main__":
     X = X.astype(np.float32)
 
     print("Saving data ... ")
-    np.save('dataset_X.npy', X)
-    np.save('dataset_Y.npy', Y)
+
+    if not os.path.isdir("data"):
+        os.mkdir("data")
+
+    np.save('data\\dataset_X.npy', X)
+    np.save('data\\dataset_Y.npy', Y)
+    np.save('data\\word_vectors.npy', word_vectors)
+    np.save('data\\i2w.npy', i2w)
+
     print("Preprocessing done !")

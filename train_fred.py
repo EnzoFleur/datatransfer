@@ -15,7 +15,20 @@ from sklearn.model_selection import train_test_split
 
 import tensorflow as tf
 
-from fred import S2S, compute_loss, compute_apply_gradients
+from fred import S2S, compute_loss, pad
+
+@tf.function
+def compute_apply_gradients(model,loss_f,a,x_topic,x,x_mask,y,y_mask, optimizer):
+
+    with tf.GradientTape() as tape:
+        
+        loss,label,prediction= compute_loss(model, loss_f,a,x_topic,x,x_mask,y,y_mask)
+        
+    gradients = tape.gradient(loss, model.trainable_variables)
+    
+    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+    
+    return loss,label,prediction
 
 if __name__=="__main__":
 
@@ -25,6 +38,7 @@ if __name__=="__main__":
     dir="../../datasets/export"
     authors = os.listdir(dir)   
 
+    max_length=512
     n_sentences = 200
     data = []
     for author in authors:
@@ -34,11 +48,11 @@ if __name__=="__main__":
             with open(os.path.join(dir,author, book), 'r',encoding="utf-8") as fp:
                 lines=fp.readlines()
                 for line in lines[100:]:
-                    # if len(line)<=500:
                     count=count+1
                     sent=line.replace("\n","")
                     tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''] + ['</S>']
-                    data.append((author,sent,tok))
+                    
+                    data.append((author,sent,tok[:max_length]))
 
                     if count==n_sentences:
                         break
@@ -59,7 +73,7 @@ if __name__=="__main__":
 
     print("Training Word2Vec")
 
-    EMBEDDING_SIZE = 300
+    EMBEDDING_SIZE = 100
     w2v = Word2Vec(list(df['Tokens']), size=EMBEDDING_SIZE, window=10, min_count=1, negative=10, workers=10)
     word_map = {}
     word_map["<PAD>"] = 0
@@ -88,6 +102,15 @@ if __name__=="__main__":
     X = X.astype(np.float32)
 
     del df, ang_tok, mask_ang_tok, ang_tok_shift, mask_ang_tok_shift
+    # batch_size=32
+    # na=200
+    # ang_pl=512
+
+    # X=np.load('data\\dataset_X.npy')
+    # Y=np.load('data\\dataset_Y.npy')
+    # word_vectors=np.load('data\\word_vectors.npy')
+    # nw=word_vectors.shape[0]
+    # i2w=np.load('data\\i2w.npy').items()
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.80, random_state=101)
     train_data = tf.data.Dataset.from_tensor_slices((X_train,Y_train)).batch(batch_size)

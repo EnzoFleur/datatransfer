@@ -204,17 +204,3 @@ def compute_loss(model,loss_f,a,x_topic,x,x_mask,y,y_mask):
     y_pred = tf.boolean_mask(probs,y_mask) 
     
     return loss_f(y_true,y_pred),y_true,y_pred
-
-
-@tf.function
-def compute_apply_gradients(model,loss_f,a,x_topic,x,x_mask,y,y_mask, optimizer):
-
-    with tf.GradientTape() as tape:
-        
-        loss,label,prediction= compute_loss(model, loss_f,a,x_topic,x,x_mask,y,y_mask)
-        
-    gradients = tape.gradient(loss, model.trainable_variables)
-    
-    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-    
-    return loss,label,prediction
