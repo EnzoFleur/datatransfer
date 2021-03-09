@@ -19,25 +19,6 @@ import horovod.tensorflow as hvd
 
 from fred import S2S, compute_loss, pad
 
-@tf.function
-def compute_apply_gradients_multigpu(model,loss_f,a,x_topic,x,x_mask,y,y_mask, optimizer, first_batch):
-
-    with tf.GradientTape() as tape:
-        
-        loss,label,prediction= compute_loss(model, loss_f,a,x_topic,x,x_mask,y,y_mask)
-        
-    tape = hvd.DistributedGradientTape(tape)
-
-    gradients = tape.gradient(loss, model.trainable_variables)
-
-    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-
-    if first_batch:
-        hvd.broadcast_variables(model.variables, root_rank=0)
-        hvd.broadcast_variables(optimizer.variables(), root_rank=0)
-    
-    return loss,label,prediction
-
 if __name__=="__main__":
 
      
@@ -139,18 +120,37 @@ if __name__=="__main__":
 
     loss_f = tf.keras.losses.CategoricalCrossentropy()
         
-    optimizer = tf.keras.optimizers.Adam(learning_rate=0.01 * hvd.size())
+    opt = tf.optimizers.Adam(learning_rate=0.01 * hvd.size())
 
     # Horovod: add Horovod DistributedOptimizer.
-    optimizer = hvd.DistributedOptimizer(optimizer)
+    opt = hvd.DistributedOptimizer(opt)
 
     loss_f = tf.keras.losses.CategoricalCrossentropy()
     epochs = 100
 
     checkpoint_dir = 'training_checkpoints' if hvd.rank() == 0 else None
-    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
-    checkpoint = tf.train.Checkpoint(optimizer=optimizer,
+    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt") if hvd.rank() == 0 else None
+    checkpoint = tf.train.Checkpoint(optimizer=opt,
                                     model=model)
+
+    @tf.function
+    def compute_apply_gradients_multigpu(a,x_topic,x,x_mask,y,y_mask, first_batch):
+
+        with tf.GradientTape() as tape:
+            
+            loss,label,prediction= compute_loss(model, loss_f,a,x_topic,x,x_mask,y,y_mask)
+            
+        tape = hvd.DistributedGradientTape(tape)
+
+        grads = tape.gradient(loss, model.trainable_variables)
+
+        opt.apply_gradients(zip(grads, model.trainable_variables))
+
+        if first_batch:
+            hvd.broadcast_variables(model.variables, root_rank=0)
+            hvd.broadcast_variables(opt.variables(), root_rank=0)
+        
+        return loss,label,prediction
 
     tr_loss = []
     te_loss = []
