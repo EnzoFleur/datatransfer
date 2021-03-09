@@ -36,10 +36,11 @@ if __name__=="__main__":
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
 
     dir="../../datasets/export"
+    dir="C:\\Users\\EnzoT\\Documents\\datasets\\gutenberg\\export"
     authors = os.listdir(dir)   
 
     max_length=512
-    n_sentences = 100
+    n_sentences = 200
     data = []
     for author in authors:
         books=os.listdir(os.path.join(dir, author))
@@ -95,7 +96,7 @@ if __name__=="__main__":
 
     batch_size = 32
 
-    D=np.load("use_embeddings.npy")
+    D=np.load("use_embeddings_512_200.npy")
     X = np.hstack([authors_id,D,ang_tok,mask_ang_tok])
     Y = np.hstack([ang_tok_shift,mask_ang_tok_shift])
 

@@ -84,12 +84,12 @@ if __name__=="__main__":
     freq = FreqDist(flat_list)
 
     # ### Training Word2Vec and USE
-    print("USE encoding")
-    import tensorflow_hub as hub
-    module_url = "https://tfhub.dev/google/universal-sentence-encoder/4" 
-    USE = hub.load(module_url)
-    print ("module %s loaded" % module_url)
-    D = np.asarray(USE(df["Raw"]),dtype=np.float32)
+    # print("USE encoding")
+    # import tensorflow_hub as hub
+    # module_url = "https://tfhub.dev/google/universal-sentence-encoder/4" 
+    # USE = hub.load(module_url)
+    # print ("module %s loaded" % module_url)
+    # D = np.asarray(USE(df["Raw"]),dtype=np.float32)
 
     print("Training Word2Vec")
 
@@ -115,7 +115,7 @@ if __name__=="__main__":
 
     batch_size = 32
 
-    D=np.load("use_embeddings.npy")
+    D=np.load("use_embeddings_512_200.npy")
     X = np.hstack([authors_id,D,ang_tok,mask_ang_tok])
     Y = np.hstack([ang_tok_shift,mask_ang_tok_shift])
 
