@@ -36,7 +36,7 @@ if __name__=="__main__":
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
 
     dir="../../datasets/export"
-    dir="C:\\Users\\EnzoT\\Documents\\datasets\\gutenberg\\export"
+
     authors = os.listdir(dir)   
 
     max_length=512
@@ -51,9 +51,9 @@ if __name__=="__main__":
                 for line in lines[100:]:
                     count=count+1
                     sent=line.replace("\n","")
-                    tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''] + ['</S>']
+                    tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''][:(max_length-2)] + ['</S>']
                     
-                    data.append((author,sent,tok[:max_length]))
+                    data.append((author,sent,tok))
 
                     if count==n_sentences:
                         break
@@ -127,8 +127,6 @@ if __name__=="__main__":
 
     test_loss = tf.keras.metrics.Mean(name='test_loss')
     test_accuracy = tf.keras.metrics.CategoricalAccuracy(name='test_accuracy')
-
-    loss_f = tf.keras.losses.CategoricalCrossentropy()
         
     optimizer = tf.keras.optimizers.Adam()
     loss_f = tf.keras.losses.CategoricalCrossentropy()
