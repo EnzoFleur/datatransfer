@@ -2,14 +2,14 @@
 #SBATCH --job-name=fred_multi # nom du job
 #SBATCH --partition=gpu_p2 #partition
 #SBATCH -C v100-32g # reserver des GPU 32 Go seulement
-#SBATCH --qos=qos_gpu-t3 # QoS
+#SBATCH --qos=qos_gpu-t4 # QoS
 #SBATCH --output=fred_multi%j.out # fichier de sortie (%j = job ID)
 #SBATCH --error=fred_multi%j.err # fichier d’erreur (%j = job ID)
 #SBATCH --time=20:00:00 # temps maximal d’allocation "(HH:MM:SS)"
 #SBATCH --nodes=1 # reserver 1 nœud
 #SBATCH --ntasks=1 # reserver 4 taches (ou processus MPI)
 #SBATCH --gres=gpu:4 # reserver 4 GPU
-#SBATCH --cpus-per-task=10 # reserver 4 CPU par tache (et memoire associee)
+#SBATCH --cpus-per-task=40 # reserver 4 CPU par tache (et memoire associee)
 #SBATCH --hint=nomultithread # desactiver l’hyperthreading
 
 module purge # nettoyer les modules herites par defaut

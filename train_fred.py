@@ -130,7 +130,7 @@ if __name__=="__main__":
         
     optimizer = tf.keras.optimizers.Adam()
     loss_f = tf.keras.losses.CategoricalCrossentropy()
-    epochs = 50
+    epochs = 40
 
     checkpoint_dir = 'training_checkpoints'
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
