@@ -168,7 +168,7 @@ if __name__=="__main__":
             
             y = tf.one_hot(y,depth = nw)
             
-            loss,label,prediction = compute_apply_gradients_multigpu(model,loss_f,a,x_topic,x,x_mask,y,y_mask,optimizer, batch==0)
+            loss,label,prediction = compute_apply_gradients_multigpu(a,x_topic,x,x_mask,y,y_mask, batch==0)
 
             train_loss(loss)
             train_accuracy(label, prediction)
