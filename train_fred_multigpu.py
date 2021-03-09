@@ -15,7 +15,7 @@ import tensorflow as tf
 
 from sklearn.model_selection import train_test_split
 
-import horovod.tensorflow.keras as hvd
+import horovod.tensorflow as hvd
 
 from fred import S2S, compute_loss, pad
 
