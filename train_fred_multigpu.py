@@ -123,7 +123,7 @@ if __name__=="__main__":
     opt = tf.optimizers.Adam(learning_rate=0.01 * hvd.size())
 
     # Horovod: add Horovod DistributedOptimizer.
-    opt = hvd.DistributedOptimizer(opt)
+    # opt = hvd.DistributedOptimizer(opt)
 
     loss_f = tf.keras.losses.CategoricalCrossentropy()
     epochs = 100
