@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --job-name=fred_unigpu # nom du job
-#SBATCH --partition=gpu_p2 #partition
 #SBATCH -C v100-32g # reserver des GPU 16 Go seulement
 #SBATCH --qos=qos_gpu-t4 # QoS
 #SBATCH --output=fred_unigpu%j.out # fichier de sortie (%j = job ID)
