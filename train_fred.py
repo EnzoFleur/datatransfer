@@ -102,6 +102,7 @@ if __name__=="__main__":
     X = X.astype(np.float32)
 
     del df, ang_tok, mask_ang_tok, ang_tok_shift, mask_ang_tok_shift
+
     # batch_size=32
     # na=200
     # ang_pl=512
@@ -184,7 +185,7 @@ if __name__=="__main__":
         te_acc.append(test_accuracy.result())
 
 
-        with open("loss_results.txt", "a") as ff:
+        with open("loss_results_uni.txt", "a") as ff:
             ff.write('%06f | %06f | %06f | %06f' % (tr_loss, te_loss, tr_acc, te_acc))
 
         if epoch % 10 == 0:
@@ -195,4 +196,4 @@ if __name__=="__main__":
         A.append(model.A(i).numpy())
     A = np.vstack(A)
         
-    np.save("author_embeddings.npy", A)
+    np.save("author_embeddings_unigpu.npy", A)

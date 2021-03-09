@@ -167,7 +167,7 @@ if __name__=="__main__":
     for epoch in range(1, epochs + 1):
         print(epoch,flush=True,)
 
-        for batch, (x,y) in enumerate(tqdm(train_data.take(train_data.shape[0] // hvd.size()))):
+        for batch, (x,y) in enumerate(tqdm(train_data.take(len(train_data) // hvd.size()))):
             
             a,x_topic,x,x_mask = tf.split(x,[1,512,ang_pl,ang_pl],axis=1)
 
@@ -202,7 +202,7 @@ if __name__=="__main__":
             f'Test Loss: {test_loss.result()}, '
             f'Test Accuracy: {test_accuracy.result() * 100}')
 
-            with open("loss_results.txt", "a") as ff:
+            with open("loss_results_multi.txt", "a") as ff:
                 ff.write('%06f | %06f | %06f | %06f' % (tr_loss, te_loss, tr_acc, te_acc))
             
             tr_loss.append(train_loss.result())
@@ -219,4 +219,4 @@ if __name__=="__main__":
             A.append(model.A(i).numpy())
         A = np.vstack(A)
 
-        np.save("author_embeddings.npy", A)
+        np.save("author_embeddings_multigpu.npy", A)
