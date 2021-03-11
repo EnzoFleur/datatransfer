@@ -18,7 +18,7 @@ import tensorflow as tf
 
 from fred import S2S, compute_loss, pad
 
-def build_dataset(dir):
+def build_dataset(dir, batch_size):
     
     nlp = English()
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
