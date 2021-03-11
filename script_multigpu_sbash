@@ -13,6 +13,6 @@
 
 module purge # nettoyer les modules herites par defaut
 conda deactivate # desactiver les environnements herites par defaut
-module load tensorflow-gpu/py3/2.3.1 # charger les modules
+module load tensorflow-gpu/py3/2.4.0 # charger les modules
 set -x # activer l’echo des commandes
 srun python -u train_fred_multigpu.py # executer son script
