@@ -37,9 +37,9 @@ def build_dataset(dir, batch_size):
                 for line in lines[100:]:
                     count=count+1
                     sent=line.replace("\n","")
-                    tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''] + ['</S>']
+                    tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''][:(max_length-2)] + ['</S>']
                     
-                    data.append((author,sent,tok[:512]))
+                    data.append((author,sent,tok))
 
                     if count==n_sentences:
                         break
