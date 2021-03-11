@@ -4,8 +4,8 @@ __pycache__/
 *$py.class
 *.npy
 
-*.err
-*.out
+# *.err
+# *.out
 
 # C extensions
 *.so
