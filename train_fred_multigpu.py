@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+import datetime
 
 from spacy.lang.en import English
 from gensim.models import Word2Vec
@@ -21,9 +22,14 @@ from fred import S2S, compute_loss, pad
 
 if __name__=="__main__":
 
-     
     # Initialize Horovod
     hvd.init()
+
+    # display info
+    if hvd.rank() == 0:
+        print(">>> Training on ", hvd.size() // hvd.local_size(), " nodes and ", hvd.size(), " processes", flush=True)
+    print("- Process {} corresponds to GPU {} of node {}".format(hvd.rank(), hvd.local_rank(), hvd.rank() // hvd.local_size()), flush=True)
+    
     
     # Pin GPU to be used to process local rank (one GPU per process)
     gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -110,6 +116,7 @@ if __name__=="__main__":
 
     # ### Model declaration and training
 
+    print("Building model ... \n", flush=True)
     model = S2S(na,word_vectors,i2w,ang_pl)
 
     train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -129,7 +136,7 @@ if __name__=="__main__":
     epochs = 100
 
     checkpoint_dir = 'training_checkpoints' if hvd.rank() == 0 else None
-    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt") if hvd.rank() == 0 else None
+    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_multi") if hvd.rank() == 0 else None
     checkpoint = tf.train.Checkpoint(optimizer=opt,
                                     model=model)
 
@@ -156,6 +163,10 @@ if __name__=="__main__":
     te_loss = []
     tr_acc = []
     te_acc = []
+
+    print("Beginning training ... \n", flush=True)
+
+    start=datetime.datetime.now()
 
     for epoch in range(1, epochs + 1):
         print(epoch,flush=True,)
@@ -193,10 +204,10 @@ if __name__=="__main__":
             f'Loss: {train_loss.result()}, '
             f'Accuracy: {train_accuracy.result() * 100}, '
             f'Test Loss: {test_loss.result()}, '
-            f'Test Accuracy: {test_accuracy.result() * 100}')
+            f'Test Accuracy: {test_accuracy.result() * 100}', flush=True)
 
             with open("loss_results_multi.txt", "a") as ff:
-                ff.write('%06f | %06f | %06f | %06f' % (tr_loss, te_loss, tr_acc, te_acc))
+                ff.write('%06f | %06f | %06f | %06f' % (train_loss.result(), test_loss.result(), train_accuracy.result()*100, test_accuracy.result()*100))
             
             tr_loss.append(train_loss.result())
             te_loss.append(test_loss.result())
@@ -207,6 +218,7 @@ if __name__=="__main__":
                 checkpoint.save(file_prefix=checkpoint_prefix)
     
     if (hvd.rank()==0):
+        print(' -- Trained in ' + str(datetime.datetime.now()-start) + ' -- ')
         A = []
         for i in range(model.na):
             A.append(model.A(i).numpy())

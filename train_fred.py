@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+import datetime
 
 from spacy.lang.en import English
 from gensim.models import Word2Vec
@@ -72,7 +73,7 @@ if __name__=="__main__":
     # print ("module %s loaded" % module_url)
     # D = np.asarray(USE(df["Raw"]),dtype=np.float32)
 
-    print("Training Word2Vec")
+    print("Training Word2Vec", flush=True)
 
     EMBEDDING_SIZE = 100
     w2v = Word2Vec(list(df['Tokens']), size=EMBEDDING_SIZE, window=10, min_count=1, negative=10, workers=10)
@@ -86,7 +87,7 @@ if __name__=="__main__":
     i2w = dict(zip([*word_map.values()],[*word_map]))
     nw = word_vectors.shape[0]
     na = len(df.Author.unique())
-    print("%d auteurs et %d mots" % (na,nw))
+    print("%d auteurs et %d mots" % (na,nw), flush=True)
 
     ang_tok,mask_ang_tok,ang_tok_shift,mask_ang_tok_shift,ang_pl = pad([[word_map[w] for w in text] for text in raw_data],shift = True)
 
@@ -133,7 +134,7 @@ if __name__=="__main__":
     epochs = 40
 
     checkpoint_dir = 'training_checkpoints'
-    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
+    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_uni")
     checkpoint = tf.train.Checkpoint(optimizer=optimizer,
                                     model=model)
 
@@ -141,6 +142,8 @@ if __name__=="__main__":
     te_loss = []
     tr_acc = []
     te_acc = []
+
+    start=datetime.datetime.now()
         
     for epoch in range(1, epochs + 1):
         print(epoch,flush=True,)
@@ -176,7 +179,7 @@ if __name__=="__main__":
         f'Loss: {train_loss.result()}, '
         f'Accuracy: {train_accuracy.result() * 100}, '
         f'Test Loss: {test_loss.result()}, '
-        f'Test Accuracy: {test_accuracy.result() * 100}')
+        f'Test Accuracy: {test_accuracy.result() * 100}', flush=True)
         
         tr_loss.append(train_loss.result())
         te_loss.append(test_loss.result())
@@ -185,11 +188,12 @@ if __name__=="__main__":
 
 
         with open("loss_results_uni.txt", "a") as ff:
-            ff.write('%06f | %06f | %06f | %06f' % (tr_loss, te_loss, tr_acc, te_acc))
+            ff.write('%06f | %06f | %06f | %06f' % (train_loss.result(), test_loss.result(), train_accuracy.result()*100, test_accuracy.result()*100))
 
         if epoch % 10 == 0:
             checkpoint.save(file_prefix=checkpoint_prefix)
 
+    print(' -- Trained in ' + str(datetime.datetime.now()-start) + ' -- ')
     A = []
     for i in range(model.na):
         A.append(model.A(i).numpy())
