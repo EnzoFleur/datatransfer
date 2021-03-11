@@ -108,6 +108,11 @@ if __name__=="__main__":
         print(">>> Training on ", hvd.size() // hvd.local_size(), " nodes and ", hvd.size(), " processes", flush=True)
     print("- Process {} corresponds to GPU {} of node {}".format(hvd.rank(), hvd.local_rank(), hvd.rank() // hvd.local_size()), flush=True)
     
+    small_cfg = tf.ConfigProto()
+    small_cfg.gpu_options.allow_growth = True
+    with tf.Session(config=small_cfg):
+        pass
+
     # Pin GPU to be used to process local rank (one GPU per process)
     gpus = tf.config.experimental.list_physical_devices('GPU')
     for gpu in gpus:

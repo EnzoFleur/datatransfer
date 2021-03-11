@@ -6,8 +6,8 @@
 #SBATCH --error=fred_multi%j.err # fichier d’erreur (%j = job ID)
 #SBATCH --time=100:00:00 # temps maximal d’allocation "(HH:MM:SS)"
 #SBATCH --nodes=4 # reserver 1 nœud
-#SBATCH --ntasks-per-node=1 # reserver 4 taches (ou processus MPI)
-#SBATCH --gres=gpu:1 # reserver 4 GPU
+#SBATCH --ntasks-per-node=2 # reserver 4 taches (ou processus MPI)
+#SBATCH --gres=gpu:2 # reserver 4 GPU
 #SBATCH --cpus-per-task=10 # reserver 4 CPU par tache (et memoire associee)
 #SBATCH --hint=nomultithread # desactiver l’hyperthreading
 
