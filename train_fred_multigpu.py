@@ -20,29 +20,11 @@ import horovod.tensorflow as hvd
 
 from fred import S2S, compute_loss, pad
 
-if __name__=="__main__":
-
-    # Initialize Horovod
-    hvd.init()
-
-    # display info
-    if hvd.rank() == 0:
-        print(">>> Training on ", hvd.size() // hvd.local_size(), " nodes and ", hvd.size(), " processes", flush=True)
-    print("- Process {} corresponds to GPU {} of node {}".format(hvd.rank(), hvd.local_rank(), hvd.rank() // hvd.local_size()), flush=True)
+def build_dataset(dir):
     
-    
-    # Pin GPU to be used to process local rank (one GPU per process)
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    for gpu in gpus:
-        tf.config.experimental.set_memory_growth(gpu, True)
-    if gpus:
-        tf.config.experimental.set_visible_devices(gpus[hvd.local_rank()], 'GPU')
-    
-
     nlp = English()
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
 
-    dir="../../datasets/export"
     authors = os.listdir(dir)   
 
     max_length=512
@@ -100,19 +82,40 @@ if __name__=="__main__":
     authors_id = np.asarray([aut2id[i] for i in list(df['Author'])])
     authors_id = np.expand_dims(authors_id, 1)
 
-    batch_size = 32
-
     D=np.load("use_embeddings_512_200.npy")
     X = np.hstack([authors_id,D,ang_tok,mask_ang_tok])
     Y = np.hstack([ang_tok_shift,mask_ang_tok_shift])
 
     X = X.astype(np.float32)
 
-    del df, ang_tok, mask_ang_tok, ang_tok_shift, mask_ang_tok_shift
-
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.80, random_state=101)
     train_data = tf.data.Dataset.from_tensor_slices((X_train,Y_train)).batch(batch_size)
     test_data = tf.data.Dataset.from_tensor_slices((X_test,Y_test)).batch(batch_size)
+
+    return train_data, test_data, na, nw, word_vectors, i2w, ang_pl
+
+
+if __name__=="__main__":
+
+    dir="../../datasets/export"
+    batch_size=32
+
+    # Initialize Horovod
+    hvd.init()
+
+    # display info
+    if hvd.rank() == 0:
+        print(">>> Training on ", hvd.size() // hvd.local_size(), " nodes and ", hvd.size(), " processes", flush=True)
+    print("- Process {} corresponds to GPU {} of node {}".format(hvd.rank(), hvd.local_rank(), hvd.rank() // hvd.local_size()), flush=True)
+    
+    # Pin GPU to be used to process local rank (one GPU per process)
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
+    if gpus:
+        tf.config.experimental.set_visible_devices(gpus[hvd.local_rank()], 'GPU')
+    
+    train_data, test_data, na, nw, word_vectors, i2w, ang_pl = build_dataset(dir, batch_size)
 
     # ### Model declaration and training
 
@@ -124,14 +127,8 @@ if __name__=="__main__":
 
     test_loss = tf.keras.metrics.Mean(name='test_loss')
     test_accuracy = tf.keras.metrics.CategoricalAccuracy(name='test_accuracy')
-
-    loss_f = tf.keras.losses.CategoricalCrossentropy()
         
     opt = tf.optimizers.Adam(learning_rate=0.01 * hvd.size())
-
-    # Horovod: add Horovod DistributedOptimizer.
-    # opt = hvd.DistributedOptimizer(opt)
-
     loss_f = tf.keras.losses.CategoricalCrossentropy()
     epochs = 100
 
@@ -184,7 +181,8 @@ if __name__=="__main__":
             train_loss(loss)
             train_accuracy(label, prediction)
 
-        if (hvd.rank()==0):   
+        if (hvd.rank()==0):
+            print("Testing ... \n", flush=True)
             for x,y in tqdm(test_data):
 
                 a,x_topic,x,x_mask = tf.split(x,[1,512,ang_pl,ang_pl],axis=1)

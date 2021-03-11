@@ -18,25 +18,10 @@ import tensorflow as tf
 
 from fred import S2S, compute_loss, pad
 
-@tf.function
-def compute_apply_gradients(model,loss_f,a,x_topic,x,x_mask,y,y_mask, optimizer):
-
-    with tf.GradientTape() as tape:
-        
-        loss,label,prediction= compute_loss(model, loss_f,a,x_topic,x,x_mask,y,y_mask)
-        
-    gradients = tape.gradient(loss, model.trainable_variables)
+def build_dataset(dir):
     
-    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-    
-    return loss,label,prediction
-
-if __name__=="__main__":
-
     nlp = English()
     tokenizer = nlp.Defaults.create_tokenizer(nlp)
-
-    dir="../../datasets/export"
 
     authors = os.listdir(dir)   
 
@@ -52,9 +37,9 @@ if __name__=="__main__":
                 for line in lines[100:]:
                     count=count+1
                     sent=line.replace("\n","")
-                    tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''][:(max_length-2)] + ['</S>']
+                    tok = ['<S>'] + [token.string.strip() for token in tokenizer(sent.lower()) if token.string.strip() != ''] + ['</S>']
                     
-                    data.append((author,sent,tok))
+                    data.append((author,sent,tok[:512]))
 
                     if count==n_sentences:
                         break
@@ -73,7 +58,7 @@ if __name__=="__main__":
     # print ("module %s loaded" % module_url)
     # D = np.asarray(USE(df["Raw"]),dtype=np.float32)
 
-    print("Training Word2Vec", flush=True)
+    print("Training Word2Vec")
 
     EMBEDDING_SIZE = 100
     w2v = Word2Vec(list(df['Tokens']), size=EMBEDDING_SIZE, window=10, min_count=1, negative=10, workers=10)
@@ -87,7 +72,7 @@ if __name__=="__main__":
     i2w = dict(zip([*word_map.values()],[*word_map]))
     nw = word_vectors.shape[0]
     na = len(df.Author.unique())
-    print("%d auteurs et %d mots" % (na,nw), flush=True)
+    print("%d auteurs et %d mots" % (na,nw))
 
     ang_tok,mask_ang_tok,ang_tok_shift,mask_ang_tok_shift,ang_pl = pad([[word_map[w] for w in text] for text in raw_data],shift = True)
 
@@ -95,32 +80,29 @@ if __name__=="__main__":
     authors_id = np.asarray([aut2id[i] for i in list(df['Author'])])
     authors_id = np.expand_dims(authors_id, 1)
 
-    batch_size = 32
-
     D=np.load("use_embeddings_512_200.npy")
     X = np.hstack([authors_id,D,ang_tok,mask_ang_tok])
     Y = np.hstack([ang_tok_shift,mask_ang_tok_shift])
 
     X = X.astype(np.float32)
 
-    del df, ang_tok, mask_ang_tok, ang_tok_shift, mask_ang_tok_shift
-
-    # batch_size=32
-    # na=200
-    # ang_pl=512
-
-    # X=np.load('data\\dataset_X.npy')
-    # Y=np.load('data\\dataset_Y.npy')
-    # word_vectors=np.load('data\\word_vectors.npy')
-    # nw=word_vectors.shape[0]
-    # i2w=np.load('data\\i2w.npy').items()
-
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.80, random_state=101)
     train_data = tf.data.Dataset.from_tensor_slices((X_train,Y_train)).batch(batch_size)
     test_data = tf.data.Dataset.from_tensor_slices((X_test,Y_test)).batch(batch_size)
 
+    return train_data, test_data, na, nw, word_vectors, i2w, ang_pl
+
+
+if __name__=="__main__":
+
+    dir="../../datasets/export"
+    batch_size=32
+
+    train_data, test_data, na, nw, word_vectors, i2w, ang_pl = build_dataset(dir, batch_size)
+
     # ### Model declaration and training
 
+    print("Building model ... \n", flush=True)
     model = S2S(na,word_vectors,i2w,ang_pl)
 
     train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -137,6 +119,19 @@ if __name__=="__main__":
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_uni")
     checkpoint = tf.train.Checkpoint(optimizer=optimizer,
                                     model=model)
+
+    @tf.function
+    def compute_apply_gradients(a,x_topic,x,x_mask,y,y_mask):
+
+        with tf.GradientTape() as tape:
+            
+            loss,label,prediction= compute_loss(model, loss_f,a,x_topic,x,x_mask,y,y_mask)
+            
+        gradients = tape.gradient(loss, model.trainable_variables)
+        
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        
+        return loss,label,prediction
 
     tr_loss = []
     te_loss = []
