@@ -98,7 +98,7 @@ def build_dataset(dir, batch_size):
 if __name__=="__main__":
 
     dir="../../datasets/export"
-    batch_size=30
+    batch_size=28
 
     # Initialize Horovod
     hvd.init()
