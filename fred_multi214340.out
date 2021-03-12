@@ -1,0 +1,483 @@
+- Process 4 corresponds to GPU 0 of node 2
+- Process 5 corresponds to GPU 1 of node 2
+- Process 2 corresponds to GPU 0 of node 1
+>>> Training on  4  nodes and  8  processes
+- Process 3 corresponds to GPU 1 of node 1
+- Process 1 corresponds to GPU 1 of node 0
+- Process 0 corresponds to GPU 0 of node 0
+- Process 6 corresponds to GPU 0 of node 3
+- Process 7 corresponds to GPU 1 of node 3
+Training Word2Vec
+Training Word2Vec
+Training Word2Vec
+Training Word2Vec
+Training Word2Vec
+Training Word2Vec
+Training Word2Vec
+Training Word2Vec
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+150 auteurs et 80727 mots
+Building model ... 
+
+Building model ... 
+
+Building model ... 
+
+Building model ... 
+
+Beginning training ... 
+
+1
+Beginning training ... 
+
+1
+Beginning training ... 
+
+1
+Beginning training ... 
+
+1
+Building model ... 
+
+Building model ... 
+
+Building model ... 
+
+Building model ... 
+
+Beginning training ... 
+
+1
+Beginning training ... 
+
+1
+Beginning training ... 
+
+1
+Beginning training ... 
+
+1
+2
+2
+2
+Testing ... 
+
+2
+2
+2
+2
+Loss: 14.377485275268555, Accuracy: 10.056854248046875, Test Loss: 14.276121139526367, Test Accuracy: 11.182637214660645
+2
+3
+3
+3
+3
+3
+3
+3
+Testing ... 
+
+Loss: 14.326255798339844, Accuracy: 10.63974380493164, Test Loss: 14.267066955566406, Test Accuracy: 11.289420127868652
+3
+4
+4
+4
+4
+4
+4
+Testing ... 
+
+4
+Loss: 14.305055618286133, Accuracy: 10.883996963500977, Test Loss: 14.262914657592773, Test Accuracy: 11.339252471923828
+4
+5
+5
+5
+5
+5
+5
+5
+Testing ... 
+
+Loss: 14.293709754943848, Accuracy: 11.016778945922852, Test Loss: 14.260103225708008, Test Accuracy: 11.374134063720703
+5
+6
+6
+Testing ... 
+
+6
+6
+6
+6
+6
+Loss: 14.285943984985352, Accuracy: 11.103598594665527, Test Loss: 14.257403373718262, Test Accuracy: 11.401426315307617
+6
+7
+7
+7
+7
+7
+7
+Testing ... 
+
+7
+Loss: 14.279799461364746, Accuracy: 11.169498443603516, Test Loss: 14.255644798278809, Test Accuracy: 11.420644760131836
+7
+8
+8
+8
+8
+8
+8
+Testing ... 
+
+8
+Loss: 14.27562141418457, Accuracy: 11.214384078979492, Test Loss: 14.258319854736328, Test Accuracy: 11.408173561096191
+8
+9
+9
+Testing ... 
+
+9
+9
+9
+9
+9
+Loss: 14.2745361328125, Accuracy: 11.23591136932373, Test Loss: 14.260163307189941, Test Accuracy: 11.400516510009766
+9
+10
+10
+10
+10
+Testing ... 
+
+10
+10
+10
+Loss: 14.272831916809082, Accuracy: 11.25849723815918, Test Loss: 14.259514808654785, Test Accuracy: 11.409087181091309
+10
+11
+11
+11
+11
+Testing ... 
+
+11
+11
+11
+Loss: 14.271239280700684, Accuracy: 11.278921127319336, Test Loss: 14.258476257324219, Test Accuracy: 11.419584274291992
+11
+12
+12
+12
+12
+Testing ... 
+
+12
+12
+12
+Loss: 14.269455909729004, Accuracy: 11.29875659942627, Test Loss: 14.257920265197754, Test Accuracy: 11.42626953125
+12
+13
+13
+Testing ... 
+
+13
+13
+13
+13
+13
+Loss: 14.268159866333008, Accuracy: 11.314325332641602, Test Loss: 14.257820129394531, Test Accuracy: 11.430206298828125
+13
+14
+14
+14
+Testing ... 
+
+14
+14
+14
+14
+Loss: 14.267375946044922, Accuracy: 11.325358390808105, Test Loss: 14.257438659667969, Test Accuracy: 11.434873580932617
+14
+15
+15
+15
+15
+Testing ... 
+
+15
+15
+15
+Loss: 14.266020774841309, Accuracy: 11.3395414352417, Test Loss: 14.256843566894531, Test Accuracy: 11.440732955932617
+15
+16
+16
+16
+16
+16
+16
+Testing ... 
+
+16
+Loss: 14.265239715576172, Accuracy: 11.349518775939941, Test Loss: 14.256743431091309, Test Accuracy: 11.443251609802246
+16
+17
+17
+17
+17
+Testing ... 
+
+17
+17
+17
+Loss: 14.264610290527344, Accuracy: 11.357958793640137, Test Loss: 14.25627326965332, Test Accuracy: 11.448004722595215
+17
+18
+18
+18
+18
+Testing ... 
+
+18
+18
+18
+Loss: 14.263903617858887, Accuracy: 11.366144180297852, Test Loss: 14.256059646606445, Test Accuracy: 11.450846672058105
+18
+19
+19
+19
+19
+19
+Testing ... 
+
+19
+19
+Loss: 14.263396263122559, Accuracy: 11.372827529907227, Test Loss: 14.255892753601074, Test Accuracy: 11.453213691711426
+19
+20
+20
+20
+20
+20
+20
+20
+Testing ... 
+
+Loss: 14.262873649597168, Accuracy: 11.379233360290527, Test Loss: 14.255650520324707, Test Accuracy: 11.456218719482422
+20
+21
+21
+21
+21
+Testing ... 
+
+21
+21
+21
+Loss: 14.2622652053833, Accuracy: 11.385926246643066, Test Loss: 14.255509376525879, Test Accuracy: 11.45854377746582
+21
+22
+22
+22
+22
+22
+22
+Testing ... 
+
+22
+Loss: 14.26165771484375, Accuracy: 11.3926362991333, Test Loss: 14.255130767822266, Test Accuracy: 11.46207046508789
+22
+Testing ... 
+
+23
+23
+23
+23
+23
+23
+23
+Loss: 14.261035919189453, Accuracy: 11.398931503295898, Test Loss: 14.254886627197266, Test Accuracy: 11.46468448638916
+23
+24
+24
+24
+24
+Testing ... 
+
+24
+24
+24
+Loss: 14.260604858398438, Accuracy: 11.403648376464844, Test Loss: 14.254707336425781, Test Accuracy: 11.466729164123535
+24
+25
+25
+25
+25
+25
+25
+25
+Testing ... 
+
+Loss: 14.260330200195312, Accuracy: 11.407356262207031, Test Loss: 14.254962921142578, Test Accuracy: 11.465493202209473
+25
+26
+26
+Testing ... 
+
+26
+26
+26
+26
+26
+Loss: 14.2599515914917, Accuracy: 11.41169548034668, Test Loss: 14.254517555236816, Test Accuracy: 11.469184875488281
+26
+27
+27
+27
+27
+Testing ... 
+
+27
+27
+27
+Loss: 14.259521484375, Accuracy: 11.416184425354004, Test Loss: 14.254183769226074, Test Accuracy: 11.47193431854248
+27
+28
+28
+28
+28
+Testing ... 
+
+28
+28
+28
+Loss: 14.2592191696167, Accuracy: 11.419747352600098, Test Loss: 14.253811836242676, Test Accuracy: 11.475138664245605
+28
+29
+29
+Testing ... 
+
+29
+29
+29
+29
+29
+Loss: 14.258769989013672, Accuracy: 11.42406940460205, Test Loss: 14.25348949432373, Test Accuracy: 11.477729797363281
+29
+30
+30
+30
+30
+30
+30
+30
+Testing ... 
+
+Loss: 14.258387565612793, Accuracy: 11.427974700927734, Test Loss: 14.253772735595703, Test Accuracy: 11.476515769958496
+30
+31
+31
+31
+31
+Testing ... 
+
+31
+31
+31
+Loss: 14.258193016052246, Accuracy: 11.430452346801758, Test Loss: 14.25378131866455, Test Accuracy: 11.47696304321289
+31
+32
+32
+32
+Testing ... 
+
+32
+32
+32
+32
+Loss: 14.257967948913574, Accuracy: 11.433012962341309, Test Loss: 14.253565788269043, Test Accuracy: 11.479050636291504
+32
+33
+33
+33
+33
+33
+Testing ... 
+
+33
+33
+Loss: 14.257706642150879, Accuracy: 11.435859680175781, Test Loss: 14.253312110900879, Test Accuracy: 11.48126220703125
+33
+Testing ... 
+
+34
+34
+34
+34
+34
+34
+34
+Loss: 14.257431030273438, Accuracy: 11.438820838928223, Test Loss: 14.253035545349121, Test Accuracy: 11.483661651611328
+34
+35
+35
+35
+35
+Testing ... 
+
+35
+35
+35
+Loss: 14.257071495056152, Accuracy: 11.44211196899414, Test Loss: 14.252889633178711, Test Accuracy: 11.485053062438965
+35
+36
+36
+36
+36
+36
+36
+Testing ... 
+
+36
+Loss: 14.2567138671875, Accuracy: 11.445269584655762, Test Loss: 14.25262451171875, Test Accuracy: 11.487167358398438
+36
+37
+37
+37
+37
+Testing ... 
+
+37
+37
+37
+Loss: 14.256355285644531, Accuracy: 11.448476791381836, Test Loss: 14.25238037109375, Test Accuracy: 11.489335060119629
+37
+38
+38
+38
+38
+Testing ... 
+
+38
+38
+38
+Loss: 14.25613784790039, Accuracy: 11.450567245483398, Test Loss: 14.252158164978027, Test Accuracy: 11.491280555725098
+38
+39
+Testing ... 
+
+39
+39
+39
+39
+39
+39
+Loss: 14.255879402160645, Accuracy: 11.453095436096191, Test Loss: 14.251861572265625, Test Accuracy: 11.493606567382812
+39
