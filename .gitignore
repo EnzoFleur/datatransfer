@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 *.npy
 
+training_checkpoints/*
+results/*
+
 # *.err
 # *.out
 

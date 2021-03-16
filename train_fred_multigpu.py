@@ -205,7 +205,7 @@ if __name__=="__main__":
             f'Test Accuracy: {test_accuracy.result() * 100}', flush=True)
 
             with open("loss_results_multi.txt", "a") as ff:
-                ff.write('%06f | %06f | %06f | %06f' % (train_loss.result(), test_loss.result(), train_accuracy.result()*100, test_accuracy.result()*100))
+                ff.write('%06f | %06f | %06f | %06f \n' % (train_loss.result(), test_loss.result(), train_accuracy.result()*100, test_accuracy.result()*100))
             
             tr_loss.append(train_loss.result())
             te_loss.append(test_loss.result())

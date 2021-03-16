@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 import os  
 import pandas as pd
 import numpy as np
@@ -96,7 +95,7 @@ def build_dataset(dir, batch_size):
 if __name__=="__main__":
 
     dir="../../datasets/export"
-    batch_size=32
+    batch_size=28
 
     train_data, test_data, na, nw, word_vectors, i2w, ang_pl = build_dataset(dir, batch_size)
 
@@ -151,7 +150,7 @@ if __name__=="__main__":
             
             y = tf.one_hot(y,depth = nw)
             
-            loss,label,prediction = compute_apply_gradients(model,loss_f,a,x_topic,x,x_mask,y,y_mask,optimizer)
+            loss,label,prediction = compute_apply_gradients(a,x_topic,x,x_mask,y,y_mask)
 
             train_loss(loss)
             train_accuracy(label, prediction)
@@ -183,9 +182,9 @@ if __name__=="__main__":
 
 
         with open("loss_results_uni.txt", "a") as ff:
-            ff.write('%06f | %06f | %06f | %06f' % (train_loss.result(), test_loss.result(), train_accuracy.result()*100, test_accuracy.result()*100))
+            ff.write('%06f | %06f | %06f | %06f\n' % (train_loss.result(), test_loss.result(), train_accuracy.result()*100, test_accuracy.result()*100))
 
-        if epoch % 10 == 0:
+        if epoch % 5 == 0:
             checkpoint.save(file_prefix=checkpoint_prefix)
 
     print(' -- Trained in ' + str(datetime.datetime.now()-start) + ' -- ')

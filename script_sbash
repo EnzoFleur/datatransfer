@@ -4,7 +4,7 @@
 #SBATCH --qos=qos_gpu-t4 # QoS
 #SBATCH --output=fred_unigpu%j.out # fichier de sortie (%j = job ID)
 #SBATCH --error=fred_unigpu%j.err # fichier d’erreur (%j = job ID)
-#SBATCH --time=99:00:00 # temps maximal d’allocation "(HH:MM:SS)"
+#SBATCH --time=100:00:00 # temps maximal d’allocation "(HH:MM:SS)"
 #SBATCH --nodes=1 # reserver 1 nœud
 #SBATCH --ntasks=1 # reserver 4 taches (ou processus MPI)
 #SBATCH --gres=gpu:1 # reserver 4 GPU
